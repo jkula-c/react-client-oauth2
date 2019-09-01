@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { BrowserRouter, Route} from 'react-router-dom';
 import Main from './Main.js';
-// import { editorMasks } from './Editor.js';
+import { editorMasks } from './Editor.js';
 import ClientOAuth2  from 'client-oauth2';
 // import queryString from 'query-string'
 
@@ -12,6 +12,7 @@ export default class App extends Component {
       data: [],
       bookmarkData: null,
       clientToken: {},
+      editorState: 0,
       retrievedBookmarkData: false,
     }
   }
@@ -32,6 +33,14 @@ export default class App extends Component {
       })
       .catch((error) => {console.log('Token request error', error);});
   }
+  createBookmarkStart(){
+    // change editor state to commence adding a bookmark
+    let editorState = 0;
+    editorState |= editorMasks.BOOKMARK;
+    editorState |= editorMasks.ADDING;
+    this.setState({ editorState: editorState  })
+  }
+
   getBookmarks() {
     fetch('http://localhost:8000/locations/bookmarks/',
       {
@@ -67,6 +76,10 @@ export default class App extends Component {
     .catch((error) => {
       console.log('Error fetching and parsing bookmark instance data', error);
     })
+  }
+  stopEdit(){
+    // change state to stop editing
+    this.setState({editorState: 0})
   }
   render(){
     return (

@@ -6,6 +6,7 @@
     "client-oauth2": "^4.2.5",
     "grommet": "^2.7.7",
     "grommet-icons": "^4.3.0",
+    "query-string": "^6.8.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router": "^5.0.1",
