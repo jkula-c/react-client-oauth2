@@ -9,19 +9,13 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      alterId: null,
-      selectedBookmarkId: null,
       data: [],
       bookmarkData: null,
       clientToken: {},
-      editorState: 0,
       retrievedBookmarkData: false,
     }
   }
-  // componentWillMount() {
-  //   const parsed = queryString.parse(window.location.search);
-  //   this.processQueryString(parsed);
-  // }
+
   componentDidMount() {
     var serverAuth = new ClientOAuth2({
       clientId: 'n0ksuebCpq039ggQtOQv7gIRvV0OhCWNCC3yhcmp',
@@ -48,15 +42,38 @@ export default class App extends Component {
       } 
     )
     .then(response => response.json())
-    .then(responseData => this.setState({ data: responseData }))
+    .then(responseData => this.setState({ data: responseData.results }))
     .catch((error) => {
       console.log('Error fetching and parsing data', error);
     });
   }
+
+  selectBookmark(id) {
+    // Cannot fetch a bookmark until we have a token
+    if (Object.keys(this.state.clientToken).length === 0) return;
+    fetch(
+      'http://localhost:8000/locations/bookmarks/' + id + '/',
+      {
+        method: "GET", mode: "cors", credentials: "omit",
+        headers: {'Authorization': "Bearer " + this.state.clientToken.accessToken }
+      }
+    )
+    .then(response => response.json())
+    .then((responseData) => {
+      return this.setState({
+        bookmarkData: responseData, retrievedBookmarkData: true
+      })
+    })
+    .catch((error) => {
+      console.log('Error fetching and parsing bookmark instance data', error);
+    })
+  }
   render(){
-    console.log(this.state.clientToken);
     return (
-      <Main data={this.state.data} />
+      <Main 
+          bookmarkData={this.state.bookmarkData} data={this.state.data}
+          selectClick={this.selectBookmark.bind(this)} 
+          />
     )
     
   }
