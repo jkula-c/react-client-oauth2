@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Grid, Grommet } from 'grommet';
 import { grommetTheme } from './GrommetStyle';
+import { BookmarksList } from './BookmarkList';
 
 export default class Main extends Component {
     render() {
@@ -18,7 +19,10 @@ export default class Main extends Component {
                   gap='small'
                   >
                     <Box gridArea='main' background='myColor'>
-                        <div>{JSON.stringify(this.props.data)}</div>
+                        {/* <div>{JSON.stringify(this.props.data)}</div> */}
+                        <BookmarksList
+                            bookmarks={this.props.data} 
+                         />
                     </Box>
                   </Grid>
             </Grommet>
